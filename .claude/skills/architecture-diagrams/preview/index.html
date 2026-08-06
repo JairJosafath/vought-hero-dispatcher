@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Excalidraw preview</title>
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        height: 100%;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      #bar {
+        position: fixed;
+        z-index: 10;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background: #fff;
+        border: 1px solid #d8d8d8;
+        border-radius: 10px;
+        padding: 6px 10px;
+        box-shadow: 0 2px 10px rgb(0 0 0 / 12%);
+        font-size: 13px;
+      }
+      #bar select,
+      #bar button {
+        font: inherit;
+        padding: 3px 6px;
+      }
+      #status {
+        color: #666;
+      }
+      #status.err {
+        color: #c92a2a;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bar">
+      <label for="file">scene</label>
+      <select id="file"></select>
+      <button id="reload" title="re-fetch the current scene">↻</button>
+      <span id="status">loading…</span>
+    </div>
+    <div id="root"></div>
+
+    <!-- Excalidraw must resolve to the *same* React instance this page uses. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.1.0",
+          "react/": "https://esm.sh/react@19.1.0/",
+          "react-dom": "https://esm.sh/react-dom@19.1.0",
+          "react-dom/": "https://esm.sh/react-dom@19.1.0/",
+          "@excalidraw/excalidraw": "https://esm.sh/@excalidraw/excalidraw@0.18.1?external=react,react-dom"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.1/dist/prod/index.css" />
+
+    <script type="module">
+      const report = (msg) => {
+        const el = document.getElementById("status");
+        if (el) {
+          el.className = "err";
+          el.textContent = msg;
+        }
+        window.__preview = { ok: false, error: msg };
+      };
+      window.addEventListener("error", (e) => report(e.message));
+      window.addEventListener("unhandledrejection", (e) => report(String(e.reason)));
+
+      const [React, ReactDOMClient, Exc] = await Promise.all([
+        import("react"),
+        import("react-dom/client"),
+        import("@excalidraw/excalidraw"),
+      ]);
+
+      const statusEl = document.getElementById("status");
+      const select = document.getElementById("file");
+
+      const { scenes, dir } = await fetch("/api/scenes").then((r) => r.json());
+      if (!scenes.length) report(`no .excalidraw files in ${dir}`);
+      for (const s of scenes) {
+        const o = document.createElement("option");
+        o.value = s;
+        o.textContent = s;
+        select.append(o);
+      }
+
+      const params = new URLSearchParams(location.search);
+      select.value = params.get("file") ?? scenes[0] ?? "";
+
+      const root = ReactDOMClient.createRoot(document.getElementById("root"));
+      let api = null;
+
+      function App() {
+        return React.createElement(Exc.Excalidraw, {
+          excalidrawAPI: (a) => {
+            api = a;
+            window.__api = a; // handy for poking at the scene from devtools
+            if (select.value) load(select.value);
+          },
+          UIOptions: { canvasActions: { loadScene: true, saveToActiveFile: false } },
+        });
+      }
+      root.render(React.createElement(App));
+
+      async function load(name) {
+        statusEl.className = "";
+        statusEl.textContent = `loading ${name}…`;
+        try {
+          const res = await fetch("/scenes/" + encodeURIComponent(name), { cache: "no-store" });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+
+          api.updateScene({
+            elements: data.elements,
+            appState: { viewBackgroundColor: data.appState?.viewBackgroundColor ?? "#fff" },
+          });
+          api.addFiles(Object.values(data.files ?? {}));
+
+          // Fit twice: the first pass runs before Excalidraw has finished
+          // measuring the freshly added images and lands at the wrong zoom.
+          // Timers, not requestAnimationFrame -- rAF stalls in a tab that is not
+          // compositing, which would hang the load in a headless/background pane.
+          const fit = () => api.scrollToContent(api.getSceneElements(), { fitToContent: true });
+          const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+          await wait(50);
+          fit();
+          await wait(300);
+          fit();
+
+          const imgs = data.elements.filter((e) => e.type === "image").length;
+          statusEl.textContent = `${data.elements.length} elements · ${imgs} images · ${Object.keys(data.files ?? {}).length} files`;
+          // Read by automated checks: window.__preview.ok tells you the scene parsed and rendered.
+          window.__preview = { ok: true, name, elements: data.elements.length, images: imgs };
+        } catch (err) {
+          report(String(err.message ?? err));
+        }
+      }
+
+      select.addEventListener("change", () => {
+        history.replaceState(null, "", `?file=${select.value}`);
+        load(select.value);
+      });
+      document.getElementById("reload").addEventListener("click", () => load(select.value));
+    </script>
+  </body>
+</html>

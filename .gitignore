@@ -1,0 +1,4 @@
+# theSVG icon cache — re-fetched on demand by the architecture-diagrams skill
+.cache/
+
+node_modules/
