@@ -109,7 +109,7 @@ export function arrow(o) {
       width: Math.abs(x2 - x1),
       height: Math.abs(y2 - y1),
       strokeColor: o.strokeColor ?? "#1971c2",
-      roundness: o.roundness ?? { type: 2 },
+      roundness: o.roundness === undefined ? { type: 2 } : o.roundness,
     }),
     points: [
       [0, 0],
@@ -144,7 +144,7 @@ export function arrowPath(o) {
       width: Math.max(...xs) - Math.min(...xs),
       height: Math.max(...ys) - Math.min(...ys),
       strokeColor: o.strokeColor ?? "#1971c2",
-      roundness: o.roundness ?? { type: 2 },
+      roundness: o.roundness === undefined ? { type: 2 } : o.roundness,
     }),
     points: rel,
     lastCommittedPoint: null,

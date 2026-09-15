@@ -131,8 +131,8 @@ fine everywhere else. Zone 3 talks to the rest of VHD through an explicit API, s
 | Phase | Diagram | Status |
 | --- | --- | --- |
 | 1 | C1 — System context | **approved** — `diagrams/dist/c1-context.excalidraw` |
-| 2 | C2 — VHD System containers | in progress |
-| 2 | C2 — Agent System containers | |
+| 2 | C2 — VHD System containers | draft — `diagrams/dist/c2-vhd-system.excalidraw`; [notes](01-vhd-containers.md) |
+| 2 | C2 — Agent System containers | draft — [SVG](../../diagrams/dist/c2-agent-system.svg); [notes](02-agent-containers.md) |
 | 2 | C2 — Hero System containers | |
 | 2 | C2 — Government System containers | |
 | 2 | C2 — Management System containers | |
@@ -165,3 +165,7 @@ Colour carries meaning and is consistent across every diagram:
 | Teal | AI / ML |
 | Blue arrows | The request path |
 | Dashed grey arrows | Async, secondary, or egress |
+
+Use the matching technology icon from the architecture-diagrams registry whenever
+a diagram names a technology (for example PostgreSQL, Go, TypeScript or DynamoDB).
+Keep the text label alongside the icon; embed icons in exported review files.

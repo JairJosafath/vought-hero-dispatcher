@@ -1,0 +1,17 @@
+{
+  "name": "vought-hero-dispatcher",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "diagram:export": "node scripts/export-diagram.mjs",
+    "diagram:build": "node diagrams/src/c2-vhd-system.mjs",
+    "diagram:lint": "node .claude/skills/architecture-diagrams/scripts/lint-scene.mjs diagrams/dist/c2-vhd-system.excalidraw"
+  },
+  "devDependencies": {
+    "@excalidraw/excalidraw": "0.18.1",
+    "esbuild": "0.28.2",
+    "playwright": "1.63.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
