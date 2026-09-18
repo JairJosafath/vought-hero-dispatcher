@@ -135,7 +135,7 @@ fine everywhere else. Zone 3 talks to the rest of VHD through an explicit API, s
 | 2 | C2 — Agent System containers | draft — [SVG](../../diagrams/dist/c2-agent-system.svg); [notes](02-agent-containers.md) |
 | 2 | C2 — Hero System containers | draft — [SVG](../../diagrams/dist/c2-hero-system.svg); [notes](03-hero-containers.md) |
 | 2 | C2 — Government System containers | draft — [SVG](../../diagrams/dist/c2-government-system.svg); [notes](04-government-containers.md) |
-| 2 | C2 — Management System containers | |
+| 2 | C2 — Management System containers | draft — [SVG](../../diagrams/dist/c2-management-system.svg); [notes](05-management-containers.md) |
 | 3 | C3 — Dispatch & matching engine (Go) | |
 | 3 | C3 — Confidential data services (Rust) | |
 | 3 | C3 — AI agent runtime (Python) | |
