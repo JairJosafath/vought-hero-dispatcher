@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "diagram:export": "node scripts/export-diagram.mjs",
-    "diagram:build": "node diagrams/src/c2-vhd-system.mjs",
-    "diagram:lint": "node .claude/skills/architecture-diagrams/scripts/lint-scene.mjs diagrams/dist/c2-vhd-system.excalidraw"
+    "diagram:build": "node diagrams/src/c2-vhd-system.mjs && node diagrams/src/c2-agent-system.mjs && node diagrams/src/c2-hero-system.mjs && node diagrams/src/c2-government-system.mjs",
+    "diagram:lint": "node .claude/skills/architecture-diagrams/scripts/lint-scene.mjs diagrams/dist/c2-vhd-system.excalidraw && node .claude/skills/architecture-diagrams/scripts/lint-scene.mjs diagrams/dist/c2-agent-system.excalidraw && node .claude/skills/architecture-diagrams/scripts/lint-scene.mjs diagrams/dist/c2-hero-system.excalidraw && node .claude/skills/architecture-diagrams/scripts/lint-scene.mjs diagrams/dist/c2-government-system.excalidraw"
   },
   "devDependencies": {
     "@excalidraw/excalidraw": "0.18.1",

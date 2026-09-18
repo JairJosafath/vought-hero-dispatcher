@@ -6,8 +6,11 @@ This is a system that supports hero assistants to help people more effectively a
 
 ## Architecture review
 
-Agent System: [SVG](diagrams/dist/c2-agent-system.svg) · [Design notes](docs/architecture/02-agent-containers.md)
+Government System: [SVG](diagrams/dist/c2-government-system.svg) · [Editable Excalidraw](diagrams/dist/c2-government-system.excalidraw) · [Design notes](docs/architecture/04-government-containers.md)
 
+Hero System: [SVG](diagrams/dist/c2-hero-system.svg) · [Design notes](docs/architecture/03-hero-containers.md)
+
+Agent System: [SVG](diagrams/dist/c2-agent-system.svg) · [Design notes](docs/architecture/02-agent-containers.md)
 
 [View C2 as SVG](diagrams/dist/c2-vhd-system.svg) ·
 [Editable Excalidraw](diagrams/dist/c2-vhd-system.excalidraw) ·
